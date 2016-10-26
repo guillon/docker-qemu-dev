@@ -26,12 +26,17 @@ necessary build dependency (including dependencies for the qemu-plugins repo).
 
 For instance, build a linux-user qemu-plugins for aarch64 and x86_64 with:
 
-    $ git clone https://github.com/guillon/qemu-plugins
+    $ git clone --depth 1 -b next/master https://github.com/guillon/qemu-plugins
     $ cd qemu-plugins
-    $ git checkout next/master
     $ ./configure --disable-werror --enable-capstone --enable-tcg-plugin \
     --disable-system --target-list=x86_64-linux-user,aarch64-linux-user --prefix=$PWD/devimage
     $ make -j4 && make install
+    $ devimage/bin/qemu-x86_64 --version
+    qemu-x86_64 version 2.6.0-stm-5.1.0, Copyright (c) 2003-2008 Fabrice Bellard
+    $ echo "Hello world!" | devimage/bin/qemu-x86_64 -tcg-plugin icount /usr/bin/md5sum
+    59ca0efa9f5633cb0371bbc0355478d8  -
+    /usr/bin/md5sum (4102): number of executed instructions on CPU #0 = 187693
+
 
 Modify Image
 ------------
@@ -45,7 +50,8 @@ In order to rebuild the image locally, extract sources and execute the `./build.
     $ ./build.sh
     $ docker run -it guillon/dev-qemu-dev
     ...
-    
+
+
 References
 ----------
 
